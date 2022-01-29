@@ -4,8 +4,8 @@
 https://www.ebidat.de/cgi-bin/ebidat.pl?id=3982
 
 ### Data Categories
-- Title
-- Geschichte
+- Title ```h2```
+- Geschichte ```h3[text='Geschichte:'] + p```
 - Bauentwicklung
 - Baubeschreibung
 

@@ -2,6 +2,7 @@ const fs = require('fs');
 const https = require('https');
 const path = require('path');
 const parse = require('node-html-parser');
+const jsdom = require('jsdom');
 
 const sections = [
   'https://www.ebidat.de/cgi-bin/ebidat.pl?id=',
@@ -15,7 +16,7 @@ const sections = [
  * Perform Actions
  */
 
-const max = 2;
+const max = 4;
 const rawDir = './raw-data/';
 const jsonDir = './json-data/';
 
@@ -144,7 +145,7 @@ function parseDownloadedFiles() {
 }
 
 function parseToJson(u) {
-  const history = u.history;
+  const history = new jsdom.JSDOM(u.history);
   const properties = u.properties;
   const physical = u.physical;
   const tourism = u.tourism;
@@ -157,12 +158,30 @@ function parseToJson(u) {
    */
 
   // Title
-  const title = new DOMParser().parseFromString(history).querySelectorAll('h2');
-  o.title = title;
+  const titleEl = history.window.document.querySelector('h2');
+  o.title = titleEl.textContent;
 
-  // Geschichte
-  // Bauentwicklung
-  // Baubeschreibung
+  // Timeline (Geschichte)
+  const timelineEl = history.window.document.querySelector(
+    'section > article.beschreibung > h3 + p:nth-of-type(1)'
+  );
+  o.timeline = timelineEl ? timelineEl.textContent : null;
+
+  // Building Development (Bauentwicklung)
+  const buildingDevelopmentEl = history.window.document.querySelector(
+    'section > article.beschreibung > h3 + p:nth-of-type(2)'
+  );
+  o.buildingDevelopment = buildingDevelopmentEl
+    ? buildingDevelopmentEl.textContent
+    : null;
+
+  // Building Description (Baubeschreibung)
+  const buildingDescriptionEl = history.window.document.querySelector(
+    'section > article.beschreibung > h3 + p:nth-of-type(3)'
+  );
+  o.buildingDescription = buildingDescriptionEl
+    ? buildingDescriptionEl.textContent
+    : null;
 
   //console.log(u);
 
