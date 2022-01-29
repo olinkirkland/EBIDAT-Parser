@@ -144,7 +144,25 @@ function parseDownloadedFiles() {
 }
 
 function parseToJson(u) {
+  const history = u.history;
+  const properties = u.properties;
+  const physical = u.physical;
+  const tourism = u.tourism;
+  const references = u.references;
+
   let o = { id: u.id };
+
+  /**
+   * History
+   */
+
+  // Title
+  const title = new DOMParser().parseFromString(history).querySelectorAll('h2');
+  o.title = title;
+
+  // Geschichte
+  // Bauentwicklung
+  // Baubeschreibung
 
   //console.log(u);
 
