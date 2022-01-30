@@ -149,7 +149,7 @@ function parseDownloadedFiles() {
           let filePath = `${jsonDir}${object.id}.json`;
           console.log(filePath);
           ensureDirectoryExistence(filePath);
-          fs.writeFileSync(filePath, JSON.stringify(object));
+          fs.writeFileSync(filePath, JSON.stringify(object, null, 2));
         } catch (err) {
           console.error(err);
         }
