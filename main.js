@@ -4,7 +4,7 @@ const path = require('path');
 const parse = require('node-html-parser');
 const jsdom = require('jsdom');
 
-const sections = [
+const sectionUrls = [
   'https://www.ebidat.de/cgi-bin/ebidat.pl?id=',
   'https://www.ebidat.de/cgi-bin/ebidat.pl?m=h&id=',
   'https://www.ebidat.de/cgi-bin/ebidat.pl?m=o&id=',
@@ -58,7 +58,7 @@ function loadFromEbidat(index = 1, section = 0, callback = null) {
   const file = fs.createWriteStream(filePath);
 
   // Assemble the query url by combining the correct section with the index
-  let url = sections[section] + index;
+  let url = sectionUrls[section] + index;
 
   console.log(' ' + url);
 
@@ -70,7 +70,7 @@ function loadFromEbidat(index = 1, section = 0, callback = null) {
     // Determine if the next query of the current index should be loaded
     // Or if the next index should be loaded (with the query index reset)
     section++;
-    if (section == sections.length) {
+    if (section == sectionUrls.length) {
       section = 0;
       index++;
     }
@@ -169,7 +169,12 @@ function parseToJson(u) {
   const tourism = new jsdom.JSDOM(u.tourism);
   const references = new jsdom.JSDOM(u.references);
 
-  let o = { id: u.id, url: sections[0] + u.id };
+  let urls = [];
+  sectionUrls.forEach((sectionUrl) => {
+    urls.push(sectionUrl + u.id);
+  });
+
+  let o = { id: u.id, urls: urls };
 
   /**
    * History
@@ -207,6 +212,18 @@ function parseToJson(u) {
 
   Object.assign(o, parseDataEls(properties));
 
+  /**
+   * Physical
+   */
+
+  Object.assign(o, parseDataEls(physical));
+
+  /**
+   * Tourism
+   */
+
+  Object.assign(o, parseDataEls(tourism));
+
   return o;
 }
 
@@ -222,22 +239,24 @@ function parseDataEls(dom) {
     const dataKeyEl = el.querySelector(`div.gruppe`);
     const dataValueEl = el.querySelector(`div.gruppenergebnis`);
 
-    let dataKey = formatDataKey(dataKeyEl.innerHTML);
-    let dataValue = formatDataValue(dataValueEl.innerHTML);
+    if (dataKeyEl && dataValueEl) {
+      let dataKey = formatDataKey(dataKeyEl.innerHTML);
+      let dataValue = formatDataValue(dataValueEl.innerHTML);
 
-    // Determine the correct id
-    let keyMatch = false;
-    keyMap.forEach((key) => {
-      if (key.ebidatKeys.indexOf(dataKey) >= 0) {
-        // Match!
-        o[key.id] = dataValue;
-        keyMatch = true;
+      // Determine the correct id
+      let keyMatch = false;
+      keyMap.forEach((key) => {
+        if (key.ebidatKeys.indexOf(dataKey) >= 0) {
+          // Match!
+          o[key.id] = dataValue;
+          keyMatch = true;
+        }
+      });
+
+      // If there is no predetermined id for this key, add a new property starting with an underscore
+      if (!keyMatch) {
+        o['_' + dataKey] = dataValue;
       }
-    });
-
-    // If there is no predetermined id for this key, add a new property starting with an underscore
-    if (!keyMatch) {
-      o['_' + dataKey] = dataValue;
     }
   });
 
