@@ -224,6 +224,25 @@ function parseToJson(u) {
 
   Object.assign(o, parseDataEls(tourism));
 
+  /**
+   * References
+   */
+
+  // References
+  const referencesEl = references.window.document.querySelector(
+    'section > article.beschreibung > ul > li.daten'
+  );
+
+  let refs = null;
+  if (referencesEl.innerHTML) {
+    refs = referencesEl.innerHTML;
+    refs = refs.substring(refs.indexOf('</h3>') + '</h3>'.length);
+    refs = refs.trim();
+    refs = refs.split('<br>');
+  }
+
+  o.references = refs;
+
   return o;
 }
 
