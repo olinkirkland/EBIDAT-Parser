@@ -146,10 +146,10 @@ function parseDownloadedFiles() {
 
 function parseToJson(u) {
   const history = new jsdom.JSDOM(u.history);
-  const properties = u.properties;
-  const physical = u.physical;
-  const tourism = u.tourism;
-  const references = u.references;
+  const properties = new jsdom.JSDOM(u.properties);
+  const physical = new jsdom.JSDOM(u.physical);
+  const tourism = new jsdom.JSDOM(u.tourism);
+  const references = new jsdom.JSDOM(u.references);
 
   let o = { id: u.id };
 
@@ -183,7 +183,39 @@ function parseToJson(u) {
     ? buildingDescriptionEl.textContent
     : null;
 
-  //console.log(u);
+  /**
+   * Properties
+   */
+
+  // Country (Staat)
+  const countryEl = properties.window.document.querySelector(
+    'section > article.beschreibung > ul > li.daten:nth-of-type(1) > div.gruppenergebnis'
+  );
+  o.country = countryEl ? countryEl.textContent : null;
+
+  // State (Bundesland)
+  const stateEl = properties.window.document.querySelector(
+    'section > article.beschreibung > ul > li.daten:nth-of-type(2) > div.gruppenergebnis'
+  );
+  o.state = stateEl ? stateEl.textContent : null;
+
+  // Region
+  const regionEl = properties.window.document.querySelector(
+    'section > article.beschreibung > ul > li.daten:nth-of-type(3) > div.gruppenergebnis'
+  );
+  o.region = regionEl ? regionEl.textContent : null;
+
+  // County (Kreis)
+  const countyEl = properties.window.document.querySelector(
+    'section > article.beschreibung > ul > li.daten:nth-of-type(4) > div.gruppenergebnis'
+  );
+  o.county = countyEl ? countyEl.textContent : null;
+
+  // City/Area (Staat)
+  const cityEl = properties.window.document.querySelector(
+    'section > article.beschreibung > ul > li.daten:nth-of-type(5) > div.gruppenergebnis'
+  );
+  o.city = cityEl ? cityEl.textContent : null;
 
   return o;
 }

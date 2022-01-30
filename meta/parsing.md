@@ -4,20 +4,38 @@
 https://www.ebidat.de/cgi-bin/ebidat.pl?id=3982
 
 ### Data Categories
-- Title ```h2```
-- Geschichte ```h3[text='Geschichte:'] + p```
+- Title
+  
+      h2
+- Geschichte
+  
+      section > article.beschreibung > h3 + p:nth-of-type(1)
 - Bauentwicklung
+  
+      section > article.beschreibung > h3 + p:nth-of-type(2)
 - Baubeschreibung
+  
+      section > article.beschreibung > h3 + p:nth-of-type(3)
 
 ## Properties
 https://www.ebidat.de/cgi-bin/ebidat.pl?m=h&id=3982
 
 ### Data Categories
 - Country (Staat)
-- Bundesland (State)
+
+      section > article.beschreibung > ul > li.daten:nth-of-type(1) > div.gruppenergebnis
+- State (Bundesland)
+  
+      section > article.beschreibung > ul > li.daten:nth-of-type(2) > div.gruppenergebnis
 - Region
-- Kreis (County)
+  
+      section > article.beschreibung > ul > li.daten:nth-of-type(3) > div.gruppenergebnis
+- County (Kreis)
+  
+      section > article.beschreibung > ul > li.daten:nth-of-type(4) > div.gruppenergebnis
 - City/Area (Stadt/Gemeinde)
+  
+      section > article.beschreibung > ul > li.daten:nth-of-type(5) > div.gruppenergebnis
 - Structure Type
 - Classification
 - Function
@@ -58,10 +76,10 @@ Accessible from any page (use History page).
 All images are contained in an href in a single div using class '.galerie' with no title.
 Captions are contained within the alt text of each image.
 
-```article.beschreibung > div.galerie > a.img```
+article.beschreibung > div.galerie > a.img
 
 ## Floor Plan
 Accessible from any page (use History page)
 Parent div uses class '.gallerie' with an initial h3 element 'Grundriss'
 
-```article.beschreibung > div.galerie h3 + img```
+article.beschreibung > div.galerie h3 + img
