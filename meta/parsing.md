@@ -37,15 +37,35 @@ https://www.ebidat.de/cgi-bin/ebidat.pl?m=h&id=3982
   
       section > article.beschreibung > ul > li.daten:nth-of-type(5) > div.gruppenergebnis
 - Structure Type
+
+      section > article.beschreibung > ul > li.daten:nth-of-type(6) > div.gruppenergebnis
 - Classification
-- Function
+
+      section > article.beschreibung > ul > li.daten:nth-of-type(7) > div.gruppenergebnis
+- Purpose
+
+      section > article.beschreibung > ul > li.daten:nth-of-type(8) > div.gruppenergebnis
 - Overview (Kurzansprache)
+
+      section > article.beschreibung > ul > li.daten:nth-of-type(9) > div.gruppenergebnis
 - (Niederungslage)
+
+      section > article.beschreibung > ul > li.daten:nth-of-type(10) > div.gruppenergebnis
 - (Lagebeschreibung)
+
+      section > article.beschreibung > ul > li.daten:nth-of-type(11) > div.gruppenergebnis
 - Dating-Begin (Datierung-Beginn)
+
+      section > article.beschreibung > ul > li.daten:nth-of-type(12) > div.gruppenergebnis
 - Dating-End (Datierung-Ende)
+
+      section > article.beschreibung > ul > li.daten:nth-of-type(13) > div.gruppenergebnis
 - Condition (Erhaltung - Heutiger Zustand)
+
+      section > article.beschreibung > ul > li.daten:nth-of-type(14) > div.gruppenergebnis
 - Commentary on Condition
+
+      section > article.beschreibung > ul > li.daten:nth-of-type(15) > div.gruppenergebnis
 
 ## Physical
 https://www.ebidat.de/cgi-bin/ebidat.pl?m=o&id=3982

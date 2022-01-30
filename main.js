@@ -187,35 +187,32 @@ function parseToJson(u) {
    * Properties
    */
 
-  // Country (Staat)
-  const countryEl = properties.window.document.querySelector(
-    'section > article.beschreibung > ul > li.daten:nth-of-type(1) > div.gruppenergebnis'
-  );
-  o.country = countryEl ? countryEl.textContent : null;
+  // Properties are assumed to be in order with no gaps
 
-  // State (Bundesland)
-  const stateEl = properties.window.document.querySelector(
-    'section > article.beschreibung > ul > li.daten:nth-of-type(2) > div.gruppenergebnis'
-  );
-  o.state = stateEl ? stateEl.textContent : null;
+  const propertyNames = [
+    'Country',
+    'State',
+    'Region',
+    'County',
+    'City',
+    'Structure Type',
+    'Classification',
+    'Purpose',
+    'Overview',
+    'Niederungslage',
+    'Lagebeschreibung',
+    'DatingBegin',
+    'DatingEnd',
+    'Condition',
+    'ConditionCommentary'
+  ];
 
-  // Region
-  const regionEl = properties.window.document.querySelector(
-    'section > article.beschreibung > ul > li.daten:nth-of-type(3) > div.gruppenergebnis'
-  );
-  o.region = regionEl ? regionEl.textContent : null;
-
-  // County (Kreis)
-  const countyEl = properties.window.document.querySelector(
-    'section > article.beschreibung > ul > li.daten:nth-of-type(4) > div.gruppenergebnis'
-  );
-  o.county = countyEl ? countyEl.textContent : null;
-
-  // City/Area (Staat)
-  const cityEl = properties.window.document.querySelector(
-    'section > article.beschreibung > ul > li.daten:nth-of-type(5) > div.gruppenergebnis'
-  );
-  o.city = cityEl ? cityEl.textContent : null;
+  for (let i = 0; i < propertyNames.length; i++) {
+    let el = properties.window.document.querySelector(
+      'section > article.beschreibung > ul > li.daten:nth-of-type(1) > div.gruppenergebnis'
+    );
+    o[propertyNames[i]] = el ? el.textContent : null;
+  }
 
   return o;
 }
