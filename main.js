@@ -12,6 +12,24 @@ const sections = [
   'https://www.ebidat.de/cgi-bin/ebidat.pl?m=n&id='
 ];
 
+const keyMap = [
+  { ebidatKeys: ['staat'], id: 'country' },
+  { ebidatKeys: ['bundesland'], id: 'state' },
+  { ebidatKeys: ['region'], id: 'region' },
+  { ebidatKeys: ['kreis'], id: 'county' },
+  { ebidatKeys: ['stadt / gemeinde'], id: 'city' },
+  { ebidatKeys: ['typ'], id: 'structure-type' },
+  { ebidatKeys: ['klassifizierung'], id: 'classification' },
+  { ebidatKeys: ['funktion rechtsstellung'], id: 'purpose' },
+  { ebidatKeys: ['kurzansprache'], id: 'overview' },
+  // { ebidatKeys: ['niederungslage'], id: 'niederungslage' },
+  // { ebidatKeys: ['lagebeschreibung'], id: 'lagebeschreibung' },
+  { ebidatKeys: ['datierung-beginn'], id: 'dateBegin' },
+  { ebidatKeys: ['datierung-ende'], id: 'dateEnd' },
+  { ebidatKeys: ['erhaltung - heutiger zustand'], id: 'condition' },
+  { ebidatKeys: ['erhaltung - kommentar'], id: 'conditionCommentary' }
+];
+
 /**
  * Perform Actions
  */
@@ -187,56 +205,64 @@ function parseToJson(u) {
    * Properties
    */
 
-  // Properties are assumed to be in order with no gaps
-
-  const propertyNames = [
-    'country',
-    'state',
-    'region',
-    'county',
-    'city',
-    'structure',
-    'classification',
-    'purpose',
-    'overview',
-    'niederungslage',
-    'lagebeschreibung',
-    'datingBegin',
-    'datingEnd',
-    'condition',
-    'conditionCommentary'
-  ];
-
-  for (let i = 0; i < propertyNames.length; i++) {
-    let el = properties.window.document.querySelector(
-      `section > article.beschreibung > ul > li.daten:nth-of-type(${
-        i + 1
-      }) > div.gruppenergebnis`
-    );
-
-    if (!el) {
-      o[propertyNames[i]] = null;
-      continue;
-    }
-
-    // Trim and split by line breaks if necessary
-    let str = el.innerHTML;
-    str.trim();
-
-    // Multiple items?
-    const lineBreakMatch = str.match(/\n|<br>/);
-
-    if (lineBreakMatch && lineBreakMatch.length > 0) {
-      let arr = str.split(/\n|<br>/);
-
-      arr = arr.map((item) => item.trim());
-      arr = arr.filter((item) => item.length > 0);
-      o[propertyNames[i]] = arr;
-      continue;
-    }
-
-    o[propertyNames[i]] = str;
-  }
+  Object.assign(o, parseDataEls(properties));
 
   return o;
+}
+
+function parseDataEls(dom) {
+  let o = {};
+
+  // Loop through all possible data elements
+  const dataEls = dom.window.document.querySelectorAll(
+    `section > article.beschreibung > ul > li.daten`
+  );
+
+  dataEls.forEach((el) => {
+    const dataKeyEl = el.querySelector(`div.gruppe`);
+    const dataValueEl = el.querySelector(`div.gruppenergebnis`);
+
+    let dataKey = formatDataKey(dataKeyEl.innerHTML);
+    let dataValue = formatDataValue(dataValueEl.innerHTML);
+
+    // Determine the correct id
+    let keyMatch = false;
+    keyMap.forEach((key) => {
+      if (key.ebidatKeys.indexOf(dataKey) >= 0) {
+        // Match!
+        o[key.id] = dataValue;
+        keyMatch = true;
+      }
+    });
+
+    // If there is no predetermined id for this key, add a new property starting with an underscore
+    if (!keyMatch) {
+      o['_' + dataKey] = dataValue;
+    }
+  });
+
+  return o;
+}
+
+function formatDataKey(str) {
+  // Strip out the ':' and make it lowercase
+  str = str.substring(0, str.indexOf(':')).toLowerCase();
+  return str;
+}
+
+function formatDataValue(str) {
+  // Trim and split by line breaks if necessary
+  str.trim();
+
+  // Multiple items?
+  const lineBreakMatch = str.match(/\n|<br>/);
+  if (lineBreakMatch && lineBreakMatch.length > 0) {
+    let arr = str.split(/\n|<br>/);
+
+    arr = arr.map((item) => item.trim());
+    arr = arr.filter((item) => item.length > 0);
+    return arr;
+  }
+
+  return str;
 }
