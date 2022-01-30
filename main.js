@@ -151,7 +151,7 @@ function parseToJson(u) {
   const tourism = new jsdom.JSDOM(u.tourism);
   const references = new jsdom.JSDOM(u.references);
 
-  let o = { id: u.id };
+  let o = { id: u.id, url: sections[0] + u.id };
 
   /**
    * History
@@ -190,28 +190,52 @@ function parseToJson(u) {
   // Properties are assumed to be in order with no gaps
 
   const propertyNames = [
-    'Country',
-    'State',
-    'Region',
-    'County',
-    'City',
-    'Structure Type',
-    'Classification',
-    'Purpose',
-    'Overview',
-    'Niederungslage',
-    'Lagebeschreibung',
-    'DatingBegin',
-    'DatingEnd',
-    'Condition',
-    'ConditionCommentary'
+    'country',
+    'state',
+    'region',
+    'county',
+    'city',
+    'structure',
+    'classification',
+    'purpose',
+    'overview',
+    'niederungslage',
+    'lagebeschreibung',
+    'datingBegin',
+    'datingEnd',
+    'condition',
+    'conditionCommentary'
   ];
 
   for (let i = 0; i < propertyNames.length; i++) {
     let el = properties.window.document.querySelector(
-      'section > article.beschreibung > ul > li.daten:nth-of-type(1) > div.gruppenergebnis'
+      `section > article.beschreibung > ul > li.daten:nth-of-type(${
+        i + 1
+      }) > div.gruppenergebnis`
     );
-    o[propertyNames[i]] = el ? el.textContent : null;
+
+    if (!el) {
+      o[propertyNames[i]] = null;
+      continue;
+    }
+
+    // Trim and split by line breaks if necessary
+    let str = el.innerHTML;
+    str.trim();
+
+    // Multiple items?
+    const lineBreakMatch = str.match(/\n|<br>/);
+
+    if (lineBreakMatch && lineBreakMatch.length > 0) {
+      let arr = str.split(/\n|<br>/);
+
+      arr = arr.map((item) => item.trim());
+      arr = arr.filter((item) => item.length > 0);
+      o[propertyNames[i]] = arr;
+      continue;
+    }
+
+    o[propertyNames[i]] = str;
   }
 
   return o;
