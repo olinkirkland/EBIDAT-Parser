@@ -6,20 +6,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Castles of Europe" />
 
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="manifest" href="/site.webmanifest" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="assets/favicon/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="assets/favicon/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="assets/favicon/favicon-16x16.png"
+    />
+    <link rel="manifest" href="assets/favicon/site.webmanifest" />
 
     <!-- JavaScript -->
     <script defer src="app.js"></script>
 
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/styles.css" />
+
     <title>Castles of Europe &mdash; Explore History</title>
   </head>
   <body>
-    <header></header>
-    <main></main>
-    <footer></footer>
+    <div class="full-height">
+      <header>
+        <div>LOGO</div>
+        <div>NAV</div>
+      </header>
+      <main>
+        <!-- SEARCH -->
+        <section class="main-column search-section">
+          <h2>Find a Castle</h2>
+          <div class="search-filter-control">
+            <p>Search</p>
+            <p>Filters</p>
+          </div>
+          <li class="search-list"></li>
+        </section>
+
+        <!-- MAP -->
+        <section class="main-column map-section"><h2>Map</h2></section>
+
+        <!-- INFO -->
+        <section class="main-column info-section">
+          <h2>View a Selected Castle</h2>
+        </section>
+      </main>
+    </div>
+    <footer>FOOTER</footer>
   </body>
 </html>

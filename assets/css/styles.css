@@ -6,14 +6,13 @@
 
 --- FONT WEIGHTS
 Default: 400
-Medium: 500
 Bold: 700
 
 --- COLORS
 Primary: #22b8cf
 Tint: #c5f6fa
 
-Greys: #555 #333
+Greys: #f8f8f8 #555 #333
 
 --- BORDER-RADIUS
 Default: 9px, 11px
@@ -24,6 +23,82 @@ Default: 9px, 11px
 
 */
 
-/**************************************/
-/*  */
-/**************************************/
+/* ************************************ */
+/* GENERAL */
+/* ************************************ */
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  /* Percentage of user's browser font-size setting */
+  font-size: 62.5%;
+  font-family: 'Merriweather', serif;
+
+  /* Doesn't work in Safari/Microsoft Edge */
+  /* scroll-behavior: smooth; */
+}
+
+.full-height {
+  height: 100vh;
+}
+
+/* ************************************ */
+/* HEADER */
+/* ************************************ */
+
+header {
+  display: flex;
+  padding: 2.4rem;
+  gap: 2.4rem;
+}
+
+/* ************************************ */
+/* MAIN */
+/* ************************************ */
+
+main {
+  display: grid;
+  grid-template-columns: 42rem 1fr 42rem;
+  height: 100%;
+  background-color: #f8f8f8;
+}
+
+.main-column {
+  padding: 2.4rem;
+  border: 1px solid black;
+}
+
+/* ************************************ */
+/* SEARCH SECTION */
+/* ************************************ */
+
+.search-info {
+}
+
+/* ************************************ */
+/* MAP SECTION */
+/* ************************************ */
+
+.map-section {
+}
+
+/* ************************************ */
+/* INFO SECTION */
+/* ************************************ */
+
+.info-section {
+}
+
+/* ************************************ */
+/* FOOTER */
+/* ************************************ */
+
+footer {
+  padding: 2.4rem;
+  background-color: #333;
+  color: #f8f8f8;
+}

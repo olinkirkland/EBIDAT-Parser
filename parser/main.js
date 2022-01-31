@@ -58,8 +58,6 @@ parseDownloadedFiles();
  */
 
 function loadFromEbidat(index = 1, section = 0, callback = null) {
-  // console.log(`Looking for a source at index ${index}`);
-
   // Make sure the file path exists so it can be written to
   let filePath = `${rawDir}${index}/entry-${index}-${section}.html`;
   ensureDirectoryExistence(filePath);
@@ -110,15 +108,15 @@ function ensureDirectoryExistence(filePath) {
  * Parse downloaded files to json
  */
 
+let allJson = {};
 function parseDownloadedFiles() {
   const dirMain = fs.readdir(rawDir, function (err, dirs) {
     if (err) {
       return console.log(`Unable to scan directory: ${err}`);
     }
 
-    // Each folder in 'dirs' contains 5 files.
     // Combine the contents of the files into one .json file and store it in json-data
-
+    // Each folder in 'dirs' contains 5 files.
     parseNext();
 
     function parseNext(index = 0) {
@@ -147,7 +145,11 @@ function parseDownloadedFiles() {
           combinedContent[sectionNames[section]] = data;
         });
 
-        const object = parseToJson(combinedContent);
+        const object = parseToObject(combinedContent);
+
+        // Add it to allJson
+        allJson[object.id] = object;
+
         try {
           let filePath = `${jsonDir}${object.id}.json`;
           console.log(filePath);
@@ -159,13 +161,27 @@ function parseDownloadedFiles() {
 
         if (++index < dirs.length) {
           parseNext(index);
+        } else {
+          writeAllJson();
         }
       });
     }
   });
 }
 
-function parseToJson(u) {
+function writeAllJson() {
+  // Write allJson to all.json, a file that contains all of the json data
+  try {
+    let filePath = `${jsonDir}/all.json`;
+    ensureDirectoryExistence(filePath);
+    console.log(`--> ${filePath}`);
+    fs.writeFileSync(filePath, JSON.stringify(allJson));
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function parseToObject(u) {
   const history = new jsdom.JSDOM(u.history);
   const properties = new jsdom.JSDOM(u.properties);
   const physical = new jsdom.JSDOM(u.physical);
