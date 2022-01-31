@@ -4,6 +4,14 @@ const path = require('path');
 const parse = require('node-html-parser');
 const jsdom = require('jsdom');
 
+const sectionNames = [
+  'history',
+  'properties',
+  'physical',
+  'tourism',
+  'references'
+];
+
 const sectionUrls = [
   'https://www.ebidat.de/cgi-bin/ebidat.pl?id=',
   'https://www.ebidat.de/cgi-bin/ebidat.pl?m=h&id=',
@@ -34,13 +42,13 @@ const keyMap = [
  * Perform Actions
  */
 
-const max = 4;
-const rawDir = './raw-data/';
-const jsonDir = './json-data/';
+const max = 200;
+const rawDir = '../raw-data/';
+const jsonDir = '../json-data/';
 
 // Download new data from EBIDAT, then parse once the downloads are complete
 // This can take a long time, will save to the raw-data folder
-// loadFromEbidat(1, 0, parseDownloadedFiles);
+// loadFromEbidat(100, 0, parseDownloadedFiles);
 
 // Parse downloaded data
 parseDownloadedFiles();
@@ -50,7 +58,7 @@ parseDownloadedFiles();
  */
 
 function loadFromEbidat(index = 1, section = 0, callback = null) {
-  console.log(`Looking for a source at index ${index}`);
+  // console.log(`Looking for a source at index ${index}`);
 
   // Make sure the file path exists so it can be written to
   let filePath = `${rawDir}${index}/entry-${index}-${section}.html`;
@@ -60,12 +68,16 @@ function loadFromEbidat(index = 1, section = 0, callback = null) {
   // Assemble the query url by combining the correct section with the index
   let url = sectionUrls[section] + index;
 
-  console.log(' ' + url);
+  console.log(
+    `${(index / max) * 100}% | ${index}/${max} | ${
+      sectionNames[section]
+    } | ${url}`
+  );
 
   const request = https.get(url, function (response) {
     response.pipe(file);
 
-    console.log('  --> Saved to ' + filePath);
+    // console.log('  --> Saved to ' + filePath);
 
     // Determine if the next query of the current index should be loaded
     // Or if the next index should be loaded (with the query index reset)
@@ -108,15 +120,6 @@ function parseDownloadedFiles() {
     // Combine the contents of the files into one .json file and store it in json-data
 
     parseNext();
-
-    // Section categories in order of index
-    const sectionNames = [
-      'history',
-      'properties',
-      'physical',
-      'tourism',
-      'references'
-    ];
 
     function parseNext(index = 0) {
       let dir = dirs[index];
@@ -206,39 +209,27 @@ function parseToJson(u) {
     ? buildingDescriptionEl.textContent
     : null;
 
-  /**
-   * Properties
-   */
-
+  // Properties, Physical, and Tourism are all parsed the same way
   Object.assign(o, parseDataEls(properties));
-
-  /**
-   * Physical
-   */
-
   Object.assign(o, parseDataEls(physical));
-
-  /**
-   * Tourism
-   */
-
   Object.assign(o, parseDataEls(tourism));
-
-  /**
-   * References
-   */
 
   // References
   const referencesEl = references.window.document.querySelector(
     'section > article.beschreibung > ul > li.daten'
   );
 
-  let refs = null;
-  if (referencesEl.innerHTML) {
-    refs = referencesEl.innerHTML;
-    refs = refs.substring(refs.indexOf('</h3>') + '</h3>'.length);
-    refs = refs.trim();
-    refs = refs.split('<br>');
+  let refs = [];
+  if (referencesEl) {
+    let childNodes = referencesEl.childNodes;
+    childNodes.forEach((node) => {
+      if (
+        node.nodeType === node.TEXT_NODE &&
+        node.textContent.trim().length > 0
+      ) {
+        refs.push(node.textContent.trim());
+      }
+    });
   }
 
   o.references = refs;
@@ -293,6 +284,7 @@ function formatDataValue(str) {
   str.trim();
 
   // Multiple items?
+  // TODO: use childNodes
   const lineBreakMatch = str.match(/\n|<br>/);
   if (lineBreakMatch && lineBreakMatch.length > 0) {
     let arr = str.split(/\n|<br>/);
