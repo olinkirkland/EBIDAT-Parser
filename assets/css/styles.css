@@ -44,6 +44,9 @@ html {
 
 .full-height {
   height: 100vh;
+  max-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr;
 }
 
 /* ************************************ */
@@ -63,20 +66,33 @@ header {
 main {
   display: grid;
   grid-template-columns: 42rem 1fr 42rem;
+  /* background-color: #f8f8f8; */
+  overflow: hidden;
   height: 100%;
-  background-color: #f8f8f8;
 }
 
 .main-column {
+  overflow: hidden;
   padding: 2.4rem;
-  border: 1px solid black;
+  height: 100%;
+  border: 1px solid red;
+
+  display: flex;
+  flex-direction: column;
 }
 
 /* ************************************ */
 /* SEARCH SECTION */
 /* ************************************ */
 
-.search-info {
+.search-section {
+  overflow: hidden;
+}
+
+#search-results {
+  border: 1px solid blue;
+  max-height: 100%;
+  overflow-y: auto;
 }
 
 /* ************************************ */
