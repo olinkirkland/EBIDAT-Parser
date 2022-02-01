@@ -6,8 +6,17 @@ fetch(url)
   })
   .then((data) => loadData(data));
 
-let entries;
+// Filter controls
+let filters = { text: '' };
+const searchInput = document.getElementById('search-input');
+searchInput.addEventListener('input', onSearchInputChanged);
 
+function onSearchInputChanged(inputEvent) {
+  filters.text = searchInput.value;
+  refreshList();
+}
+
+let entries;
 function loadData(data) {
   entries = data;
 
@@ -16,12 +25,15 @@ function loadData(data) {
 
 function refreshList() {
   const searchResults = document.getElementById('search-results');
+  // Remove results
+  searchResults.replaceChildren([]);
+
+  // Add results
   for (const id in entries) {
-    if (!determineShowEntry(id)) {
+    const entry = entries[id];
+    if (!determineShowEntry(entry)) {
       continue;
     }
-
-    const entry = entries[id];
 
     // Create the item
     let item = `<li><div><h3>${entry.title}</h3></div><p class="location">${entry.city}, ${entry.state}</p><p class="condition">${entry.condition}</p><div class="tags"></div><p class="result-id">${id}</p></li>`;
@@ -46,8 +58,24 @@ function refreshList() {
 
   const searchResultsCount = document.getElementById('result-count-value');
   searchResultsCount.textContent = searchResults.childNodes.length;
+  const searchResultsDescription = document.getElementById(
+    'result-count-description'
+  );
+  searchResultsDescription.textContent = filters.text
+    ? ` results for ${filters.text}`
+    : 'results';
 }
 
 function determineShowEntry(entry) {
-  return true;
+  // Returns true if this entry should be included in the search results
+  if (
+    filters.text == '' ||
+    (filters.text &&
+      filters.text.length > 0 &&
+      entry.title.toLowerCase().indexOf(filters.text.toLowerCase()) >= 0)
+  ) {
+    return true;
+  }
+
+  return false;
 }

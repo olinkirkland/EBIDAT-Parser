@@ -30,8 +30,6 @@ const keyMap = [
   { ebidatKeys: ['klassifizierung'], id: 'classification' },
   { ebidatKeys: ['funktion rechtsstellung'], id: 'purpose' },
   { ebidatKeys: ['kurzansprache'], id: 'overview' },
-  // { ebidatKeys: ['niederungslage'], id: 'niederungslage' },
-  // { ebidatKeys: ['lagebeschreibung'], id: 'lagebeschreibung' },
   { ebidatKeys: ['datierung-beginn'], id: 'dateBegin' },
   { ebidatKeys: ['datierung-ende'], id: 'dateEnd' },
   { ebidatKeys: ['erhaltung - heutiger zustand'], id: 'condition' },
@@ -147,6 +145,8 @@ function parseDownloadedFiles() {
 
         const object = parseToObject(combinedContent);
 
+        analyzeObject(object);
+
         // Add it to allJson
         if (object) {
           allJson[object.id] = object;
@@ -164,10 +164,27 @@ function parseDownloadedFiles() {
         if (++index < dirs.length) {
           parseNext(index);
         } else {
+          // End
           writeAllJson();
+          printAllKeys();
         }
       });
     }
+  });
+}
+
+function printAllKeys() {
+  let arr = [];
+  for (key in allKeys) {
+    arr.push({ key: key, value: allKeys[key] });
+  }
+
+  arr.sort(function (a, b) {
+    return b.value - a.value;
+  });
+
+  arr.forEach((item, index) => {
+    console.log(item.key + ' ... ' + item.value);
   });
 }
 
@@ -180,6 +197,13 @@ function writeAllJson() {
     fs.writeFileSync(filePath, JSON.stringify(allJson));
   } catch (err) {
     console.error(err);
+  }
+}
+
+let allKeys = {};
+function analyzeObject(o) {
+  for (key in o) {
+    allKeys[key] = allKeys[key] ? allKeys[key] + 1 : 1;
   }
 }
 
