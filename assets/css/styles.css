@@ -12,10 +12,10 @@ Bold: 700
 Primary: #22b8cf
 Tint: #c5f6fa
 
-Greys: #f8f8f8 #555 #333
+Greys: #f8f8f8 #ccc #555 #333
 
 --- BORDER-RADIUS
-Default: 9px, 11px
+Default: 5px
 
 --- WHITESPACE (px)
 2 / 4 / 8 / 12 / 16 / 24 / 32 /
@@ -31,6 +31,7 @@ Default: 9px, 11px
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  color: #333;
 }
 
 html {
@@ -40,6 +41,24 @@ html {
 
   /* Doesn't work in Safari/Microsoft Edge */
   /* scroll-behavior: smooth; */
+}
+
+h1 {
+}
+
+h2 {
+  font-size: 2.4rem;
+}
+
+h3 {
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+}
+
+p {
+  font-size: 1.2rem;
+  line-height: 1.2;
 }
 
 .full-height {
@@ -66,7 +85,6 @@ header {
 main {
   display: grid;
   grid-template-columns: 42rem 1fr 42rem;
-  /* background-color: #f8f8f8; */
   overflow: hidden;
   height: 100%;
 }
@@ -75,7 +93,6 @@ main {
   overflow: hidden;
   padding: 2.4rem;
   height: 100%;
-  border: 1px solid red;
 
   display: flex;
   flex-direction: column;
@@ -89,10 +106,57 @@ main {
   overflow: hidden;
 }
 
+.results-count {
+  text-align: center;
+}
+
 #search-results {
-  border: 1px solid blue;
   max-height: 100%;
   overflow-y: auto;
+}
+
+#search-results > li {
+  position: relative;
+  margin: 1.2rem;
+  list-style: none;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+  padding: 2.4rem;
+}
+
+#search-results > li h3 {
+  margin-bottom: 0.4rem;
+}
+
+#search-results > li .location {
+  margin-bottom: 0.8rem;
+}
+
+#search-results > li .condition {
+  color: rgba(51, 51, 51, 0.6);
+  margin-bottom: 0.8rem;
+}
+
+#search-results > li .result-id {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0.8rem;
+  color: rgba(51, 51, 51, 0.2);
+}
+
+.tags {
+  padding: 0.4rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tags > li {
+  color: #f8f8f8;
+  background-color: #555;
+  border-radius: 5px;
+  letter-spacing: 1px;
+  padding: 0.4rem 0.8rem;
 }
 
 /* ************************************ */

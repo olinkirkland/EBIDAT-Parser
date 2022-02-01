@@ -26,7 +26,7 @@ const keyMap = [
   { ebidatKeys: ['region'], id: 'region' },
   { ebidatKeys: ['kreis'], id: 'county' },
   { ebidatKeys: ['stadt / gemeinde'], id: 'city' },
-  { ebidatKeys: ['typ'], id: 'structure-type' },
+  { ebidatKeys: ['typ'], id: 'structureType' },
   { ebidatKeys: ['klassifizierung'], id: 'classification' },
   { ebidatKeys: ['funktion rechtsstellung'], id: 'purpose' },
   { ebidatKeys: ['kurzansprache'], id: 'overview' },
@@ -148,15 +148,17 @@ function parseDownloadedFiles() {
         const object = parseToObject(combinedContent);
 
         // Add it to allJson
-        allJson[object.id] = object;
+        if (object) {
+          allJson[object.id] = object;
 
-        try {
-          let filePath = `${jsonDir}${object.id}.json`;
-          console.log(filePath);
-          ensureDirectoryExistence(filePath);
-          fs.writeFileSync(filePath, JSON.stringify(object, null, 2));
-        } catch (err) {
-          console.error(err);
+          try {
+            let filePath = `${jsonDir}${object.id}.json`;
+            console.log(filePath);
+            ensureDirectoryExistence(filePath);
+            fs.writeFileSync(filePath, JSON.stringify(object, null, 2));
+          } catch (err) {
+            console.error(err);
+          }
         }
 
         if (++index < dirs.length) {
@@ -202,6 +204,9 @@ function parseToObject(u) {
   // Title
   const titleEl = history.window.document.querySelector('h2');
   o.title = titleEl.textContent;
+  if (!o.title) {
+    return null;
+  }
 
   // Timeline (Geschichte)
   const timelineEl = history.window.document.querySelector(
