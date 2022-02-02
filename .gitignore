@@ -1,3 +1,7 @@
+# Ignore these files
 raw-data
-json-data
+json-data/*
 node_modules
+
+# Don't ignore these files
+!json-data/all.json

@@ -40,16 +40,16 @@ const keyMap = [
  * Perform Actions
  */
 
-const max = 200;
+const max = 2000;
 const rawDir = '../raw-data/';
 const jsonDir = '../json-data/';
 
 // Download new data from EBIDAT, then parse once the downloads are complete
 // This can take a long time, will save to the raw-data folder
-// loadFromEbidat(100, 0, parseDownloadedFiles);
+loadFromEbidat(1, 0, parseDownloadedFiles);
 
 // Parse downloaded data
-parseDownloadedFiles();
+// parseDownloadedFiles();
 
 /**
  * Download from EBIDAT
@@ -65,7 +65,7 @@ function loadFromEbidat(index = 1, section = 0, callback = null) {
   let url = sectionUrls[section] + index;
 
   console.log(
-    `${(index / max) * 100}% | ${index}/${max} | ${
+    `${Math.floor((index / max) * 10000) / 100}% | ${index}/${max} | ${
       sectionNames[section]
     } | ${url}`
   );

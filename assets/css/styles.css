@@ -48,6 +48,7 @@ h1 {
 
 h2 {
   font-size: 2.4rem;
+  margin-bottom: 1.2rem;
 }
 
 h3 {
@@ -125,7 +126,6 @@ main {
   position: relative;
   margin: 1.2rem;
   list-style: none;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
   padding: 2.4rem;
 }
 
