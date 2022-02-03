@@ -57,12 +57,12 @@ function refreshList() {
   }
 
   const searchResultsCount = document.getElementById('result-count-value');
-  searchResultsCount.textContent = searchResults.childNodes.length;
+  searchResultsCount.textContent = searchResults.childNodes.length - 1;
   const searchResultsDescription = document.getElementById(
     'result-count-description'
   );
   searchResultsDescription.textContent = filters.text
-    ? ` results for ${filters.text}`
+    ? ` results for '${filters.text}'`
     : 'results';
 }
 
